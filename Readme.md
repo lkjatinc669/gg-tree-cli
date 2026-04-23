@@ -15,8 +15,6 @@ Designed to handle large directories safely with:
 npm install -g gg-tree-cli
 ````
 
----
-
 ## Usage
 
 ```bash
@@ -52,8 +50,6 @@ ggtree . --ignore=node_modules,dist,*.log
 ggtree . --no-ignore
 ```
 
----
-
 ## Options
 
 | Option                | Description                               |
@@ -68,7 +64,6 @@ ggtree . --no-ignore
 | `--search <query>`    | Search files by name                      |
 | `--concurrency <n>`   | Control parallel scanning                 |
 
----
 
 ## Ignore System
 
@@ -84,13 +79,9 @@ dist
 *.log
 ```
 
----
-
 ### 2. `.gitignore`
 
 Automatically respects existing `.gitignore`
-
----
 
 ### 3. CLI ignore
 
@@ -98,15 +89,11 @@ Automatically respects existing `.gitignore`
 ggtree . --ignore=dist,*.log
 ```
 
----
-
 ### 4. Disable ignore
 
 ```bash
 ggtree . --no-ignore
 ```
-
----
 
 ## Output
 
@@ -120,23 +107,17 @@ my-project/
 └── package.json
 ```
 
----
-
 ### JSON Output
 
 ```bash
 ggtree . --json
 ```
 
----
-
 ### Save to file
 
 ```bash
 ggtree . --output tree.txt
 ```
-
----
 
 ## Features
 
@@ -146,8 +127,6 @@ ggtree . --output tree.txt
 * Ignore system (`.ggtreeignore` + `.gitignore`)
 * Live progress indicator
 * Modular architecture (usable as a library)
-
----
 
 ## Project Structure
 
@@ -164,8 +143,6 @@ lib/
   ignore.js       # ignore handling
 ```
 
----
-
 ## Performance Tips
 
 * Use `--depth` for faster scans on large drives
@@ -174,8 +151,6 @@ lib/
   ```bash
   ggtree D: --concurrency 10
   ```
-
----
 
 ## License
 MIT
