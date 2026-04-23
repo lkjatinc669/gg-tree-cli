@@ -1,28 +1,48 @@
 #!/usr/bin/env node
 
+// Core Node + dependencies
 const path = require("path");
 const { Command } = require("commander");
+const fs = require("fs");
+
+// Internal modules (tree engine)
 const { scanDir } = require("../lib/scanner");
 const { buildTreeString } = require("../lib/builder");
 const { flattenTree } = require("../lib/indexer");
 const { search } = require("../lib/search");
 const { createLimiter } = require("../lib/limiter");
 const { createIgnoreFilter } = require("../lib/ignore");
+
+// Progress bar for live scanning feedback
 const cliProgress = require("cli-progress");
+
+// Importing meta data from package.json
+const { description, version } = require("../package.json");
 
 const program = new Command();
 
-
-
-// 🔧 CLI config
+/**
+ * CLI metadata
+ * - name: command name used globally
+ * - description: shown in --help
+ * - version: CLI version
+ */
 program
   .name("ggtree")
-  .description("Fast cross-platform tree + file index CLI")
-  .version("1.0.0");
+  .description(description)
+  .version(version);
 
-// 🌳 Default command (scan + print)
+/**
+ * Main command (default behavior)
+ * Handles:
+ * - scanning directories
+ * - filtering
+ * - output modes (tree/json/search/file)
+ */
 program
   .argument("[dir]", "directory to scan", process.cwd())
+
+  // CLI options
   .option("--all", "show hidden files")
   .option("--ext <extensions>", "filter extensions (comma separated)")
   .option("--depth <number>", "limit depth", parseInt)
@@ -36,18 +56,33 @@ program
     try {
       const targetDir = path.resolve(dir);
 
+      /**
+       * Build ignore filter:
+       * - supports .ggtreeignore
+       * - supports .gitignore
+       * - supports CLI ignore
+       * - can be disabled via --no-ignore
+       */
       const ignoreFilter = createIgnoreFilter(targetDir, options);
 
+      /**
+       * Scanner configuration object
+       */
       const config = {
         ignoreFilter,
         extensions: options.ext ? options.ext.split(",") : null,
         showHidden: options.all || false,
         maxDepth: options.depth ?? Infinity,
-        rootDir: targetDir, // 👈 just add it here
+        rootDir: targetDir, 
       };
 
+      // Concurrency limiter to avoid overwhelming filesystem
       const limiter = createLimiter(options.concurrency);
 
+      /**
+       * Progress bar setup (infinite animation style)
+       * Since total files are unknown, we simulate movement
+       */
       const progressBar = new cliProgress.SingleBar(
         {
           format: "Scanning |{bar}| {count} dirs | {dir}",
@@ -68,6 +103,10 @@ program
         count: 0,
       });
 
+      /**
+       * Start scanning
+       * onProgress callback updates progress bar in real-time
+       */
       const tree = await scanDir(
         targetDir,
         config,
@@ -91,9 +130,12 @@ program
         process.stdout.write("\n");
       }
 
-      console.log("\n"); // move to next line after scan;
+      console.log("\n"); 
 
-      // 🔍 search mode
+      /**
+       * SEARCH MODE
+       * Converts tree to flat list and filters by query
+       */
       if (options.search) {
         const flat = flattenTree(tree);
         const results = search(flat, options.search);
@@ -101,16 +143,24 @@ program
         return;
       }
 
-      // 📦 json mode
+      /**
+       * JSON OUTPUT MODE
+       */
       if (options.json) {
         console.log(JSON.stringify(tree, null, 2));
         return;
       }
 
-      // 🌳 normal tree output
+      /**
+       * TREE OUTPUT MODE
+       * Builds formatted string
+       */
       const rootName = path.basename(targetDir);
       const treeString = rootName + "/\n" + buildTreeString(tree);
 
+      /**
+       * FILE OUTPUT MODE
+       */
       if (options.output) {
         fs.writeFileSync(options.output, treeString, "utf-8");
         console.log(`Saved to ${options.output}`);
