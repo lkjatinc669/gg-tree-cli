@@ -39,12 +39,12 @@ program
       const ignoreFilter = createIgnoreFilter(targetDir, options);
 
       const config = {
-  ignoreFilter,
-  extensions: options.ext ? options.ext.split(",") : null,
-  showHidden: options.all || false,
-  maxDepth: options.depth ?? Infinity,
-  rootDir: targetDir, // 👈 just add it here
-};
+        ignoreFilter,
+        extensions: options.ext ? options.ext.split(",") : null,
+        showHidden: options.all || false,
+        maxDepth: options.depth ?? Infinity,
+        rootDir: targetDir, // 👈 just add it here
+      };
 
       const limiter = createLimiter(options.concurrency);
 
