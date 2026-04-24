@@ -135,12 +135,12 @@ bin/
   cli.js          # CLI entry (Commander)
 
 lib/
-  scanner.js      # recursive traversal
-  limiter.js      # concurrency control
-  printer.js      # tree output
-  indexer.js      # flatten structure
-  search.js       # search logic
+  builder.js      # tree output
   ignore.js       # ignore handling
+  indexer.js      # flatten structure
+  limiter.js      # concurrency control
+  scanner.js      # recursive traversal
+  search.js       # search logic
 ```
 
 ## Performance Tips
