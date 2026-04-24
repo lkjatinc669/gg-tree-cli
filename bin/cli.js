@@ -131,8 +131,6 @@ program
         process.stdout.write("\n");
       }
 
-      console.log("\n"); 
-
       /**
        * SEARCH MODE
        * Converts tree to flat list and filters by query
