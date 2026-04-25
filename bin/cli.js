@@ -55,8 +55,6 @@ program
   .action(async (dir, options) => {
     try {
       const targetDir = path.resolve(dir);
-
-      console.log(options)
       /**
        * Build ignore filter:
        * - supports .ggtreeignore
