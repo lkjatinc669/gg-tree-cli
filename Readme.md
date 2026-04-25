@@ -131,16 +131,18 @@ ggtree . --output tree.txt
 ## Project Structure
 
 ```
-bin/
-  cli.js          # CLI entry (Commander)
-
-lib/
-  builder.js      # tree output
-  ignore.js       # ignore handling
-  indexer.js      # flatten structure
-  limiter.js      # concurrency control
-  scanner.js      # recursive traversal
-  search.js       # search logic
+gg-tree-cli/
+├── bin
+│   └── cli.js                      # CLI entry (Commander)
+├── lib
+│   ├── buildTreeString.js          # Node structure to tree structure 
+│   ├── createIgnoreFilter.js       # Ignore file 
+│   ├── createLimiter.js            # Concurrency Control
+│   ├── flattenTree.js              # Flatten Structure
+│   ├── scanDir.js                  # Recursive traversal
+│   └── searchFileInTree.js         # Search file in tree
+├── package.json                    # Contains all the package information
+└── Readme.md                       # Information about package and help
 ```
 
 ## Performance Tips

@@ -12,6 +12,7 @@ const { flattenTree } = require("../lib/flattenTree.js");
 const { searchFileInTree } = require("../lib/searchFileInTree.js");
 const { createLimiter } = require("../lib/createLimiter.js");
 const { createIgnoreFilter } = require("../lib/createIgnoreFilter.js");
+const { searchExtInTree } = require("../lib/searchExtInTree.js")
 
 // Progress bar for live scanning feedback
 const cliProgress = require("cli-progress");
@@ -72,7 +73,7 @@ program
         extensions: options.ext ? options.ext.split(",") : null,
         showHidden: options.all || false,
         maxDepth: options.depth ?? Infinity,
-        rootDir: targetDir, 
+        rootDir: targetDir,
       };
 
       // Concurrency limiter to avoid overwhelming filesystem
@@ -130,7 +131,7 @@ program
       }
 
       /**
-       * SEARCH MODE
+       * SEARCH FILE NAME MODE
        */
       if (options.search) {
         const query = options.search.toLowerCase();
@@ -139,6 +140,18 @@ program
           if (node.type !== "file") return false;
           return node.name.toLowerCase().includes(query);
         });
+      }
+
+      /**
+       * SEARCH FILE EXTENSION MODE
+       */
+      if (options.ext) {
+        const extensions = options.ext
+          .split(",")
+          .map(e => e.trim().toLowerCase())
+          .map(e => (e.startsWith(".") ? e : "." + e));
+
+        tree = searchExtInTree(tree, extensions);
       }
 
       /**
