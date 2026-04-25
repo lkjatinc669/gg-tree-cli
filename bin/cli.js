@@ -9,7 +9,7 @@ const fs = require("fs");
 const { scanDir } = require("../lib/scanner");
 const { buildTreeString } = require("../lib/builder");
 const { flattenTree } = require("../lib/indexer");
-const { search } = require("../lib/search");
+const { searchFileInTree } = require("../lib/search");
 const { createLimiter } = require("../lib/limiter");
 const { createIgnoreFilter } = require("../lib/ignore");
 
@@ -108,7 +108,7 @@ program
        * Start scanning
        * onProgress callback updates progress bar in real-time
        */
-      const tree = await scanDir(
+      let tree = await scanDir(
         targetDir,
         config,
         limiter,
@@ -133,13 +133,14 @@ program
 
       /**
        * SEARCH MODE
-       * Converts tree to flat list and filters by query
        */
       if (options.search) {
-        const flat = flattenTree(tree);
-        const results = search(flat, options.search);
-        console.log(JSON.stringify(results, null, 2));
-        return;
+        const query = options.search.toLowerCase();
+
+        tree = searchFileInTree(tree, (node) => {
+          if (node.type !== "file") return false;
+          return node.name.toLowerCase().includes(query);
+        });
       }
 
       /**
@@ -167,7 +168,7 @@ program
         console.log(treeString);
       }
     } catch (err) {
-      console.error("Error:", err.message);
+      console.error(err);
     }
   }
   );
