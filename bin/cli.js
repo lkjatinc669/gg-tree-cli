@@ -6,12 +6,12 @@ const { Command } = require("commander");
 const fs = require("fs");
 
 // Internal modules (tree engine)
-const { scanDir } = require("../lib/scanner");
-const { buildTreeString } = require("../lib/builder");
-const { flattenTree } = require("../lib/indexer");
-const { searchFileInTree } = require("../lib/search");
-const { createLimiter } = require("../lib/limiter");
-const { createIgnoreFilter } = require("../lib/ignore");
+const { scanDir } = require("../lib/scanDir.js");
+const { buildTreeString } = require("../lib/buildTreeString.js");
+const { flattenTree } = require("../lib/flattenTree.js");
+const { searchFileInTree } = require("../lib/searchFileInTree.js");
+const { createLimiter } = require("../lib/createLimiter.js");
+const { createIgnoreFilter } = require("../lib/createIgnoreFilter.js");
 
 // Progress bar for live scanning feedback
 const cliProgress = require("cli-progress");

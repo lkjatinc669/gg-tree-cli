@@ -1,9 +1,9 @@
 {
   "name": "gg-tree-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Fast cross-platform tree + file indexing CLI",
   "bin": {
-    "ggtree": "./bin/cli.js"
+    "ggtree": "bin/cli.js"
   },
   "scripts": {
     "r": "npm unlink -g;npm link"
